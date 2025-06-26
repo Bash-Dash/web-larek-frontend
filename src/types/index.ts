@@ -36,6 +36,7 @@ export interface IBasket {
 
 export interface IOrder extends IOrderForm {
 	items: string[];
+	total?: number;
 }
 
 export type PaymentMethod = 'cash' | 'card';

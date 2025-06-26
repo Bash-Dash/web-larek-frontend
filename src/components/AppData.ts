@@ -2,6 +2,7 @@ import { IEvents } from '../components/base/events';
 import {
 	IProduct,
 	IBasket,
+	IOrder,
 	IOrderForm,
 	PaymentMethod,
 	FormErrors,
@@ -15,11 +16,12 @@ export class AppData {
 		total: 0,
 	};
 
-	order: IOrderForm = {
+	order: IOrder = {
 		email: '',
 		phone: '',
 		address: '',
 		payment: null,
+		items: [],
 	};
 
 	constructor(protected events: IEvents) {}
@@ -55,6 +57,7 @@ export class AppData {
 	clearBasket() {
 		this.basket.items = [];
 		this.basket.total = 0;
+		this.order.items = [];
 		this.events.emit('basket:changed', this.basket);
 	}
 
@@ -67,6 +70,12 @@ export class AppData {
 			this.order.payment = value as PaymentMethod;
 		} else {
 			this.order[field] = value;
+		}
+
+		if (field === 'address') {
+			this.validateOrder();
+		} else if (field === 'email' || field === 'phone') {
+			this.validateContacts();
 		}
 	}
 

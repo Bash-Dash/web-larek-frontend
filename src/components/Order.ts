@@ -1,4 +1,4 @@
-import { Form } from './common/Form';
+import { Form, IFormState } from './common/Form';
 import { IOrderForm, PaymentMethod } from '../types';
 import { IEvents } from './base/events';
 import { ensureElement } from '../utils/utils';
@@ -38,13 +38,36 @@ export class Order extends Form<IOrderForm> {
 		});
 	}
 
-	setPayment(method: PaymentMethod) {
-		this.toggleClass(this._paymentCard, 'button_alt-active', method === 'card');
-		this.toggleClass(this._paymentCash, 'button_alt-active', method === 'cash');
+	setPayment(method: PaymentMethod | null) {
+		if (method) {
+			this.toggleClass(
+				this._paymentCard,
+				'button_alt-active',
+				method === 'card'
+			);
+			this.toggleClass(
+				this._paymentCash,
+				'button_alt-active',
+				method === 'cash'
+			);
+		} else {
+			this.toggleClass(this._paymentCard, 'button_alt-active', false);
+			this.toggleClass(this._paymentCash, 'button_alt-active', false);
+		}
 		this.onInputChange('payment', method);
 	}
 
 	set address(value: string) {
 		this._address.value = value;
+	}
+
+	render(state?: Partial<IOrderForm> & IFormState) {
+		if (state) {
+			this._address.value = state.address || '';
+			if (state.payment) {
+				this.setPayment(state.payment);
+			}
+		}
+		return super.render(state);
 	}
 }

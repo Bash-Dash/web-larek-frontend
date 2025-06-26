@@ -92,9 +92,9 @@ events.on('basket:changed', () => {
 events.on('order:open', () => {
 	modal.render({
 		content: orderView.render({
-			payment: 'card',
-			address: '',
-			valid: false,
+			payment: null,
+			address: appData.order.address || '',
+			valid: !!appData.order.address,
 			errors: [],
 		}),
 	});
@@ -112,9 +112,9 @@ events.on('order:submit', () => {
 	if (isValid) {
 		modal.render({
 			content: contactsView.render({
-				email: appData.order.email,
-				phone: appData.order.phone,
-				valid: false,
+				email: appData.order.email || '',
+				phone: appData.order.phone || '',
+				valid: !!appData.order.email && !!appData.order.phone,
 				errors: [],
 			}),
 		});

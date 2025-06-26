@@ -1,4 +1,4 @@
-import { Form } from './common/Form';
+import { Form, IFormState } from './common/Form';
 import { IOrderForm } from '../types';
 import { IEvents } from './base/events';
 import { ensureElement } from '../utils/utils';
@@ -41,5 +41,13 @@ export class Contacts extends Form<IOrderForm> {
 			email: this._email.value,
 			phone: this._phone.value,
 		};
+	}
+
+	render(state?: Partial<IOrderForm> & IFormState) {
+		if (state) {
+			this._email.value = state.email || '';
+			this._phone.value = state.phone || '';
+		}
+		return super.render(state);
 	}
 }
